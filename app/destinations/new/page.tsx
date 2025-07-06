@@ -2,15 +2,25 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { createTrip } from "@/lib/actions/create-trip";
 import { cn } from "@/lib/utils";
+import { useTransition } from "react";
 
 export default function NewTrip() {
+  const [isPending, startTransition] = useTransition();
   return (
     <div className="max-w-lg mx-auto mt-10">
       <Card>
         <CardHeader>New Destination</CardHeader>
         <CardContent>
-          <form className="space-y-6">
+          <form
+            className="space-y-6"
+            action={(formData: FormData) => {
+              startTransition(() => {
+                createTrip(formData);
+              });
+            }}
+          >
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Title
@@ -68,8 +78,8 @@ export default function NewTrip() {
                 />
               </div>
             </div>
-            <Button type="submit" className="w-full">
-                Create Destination
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? "Creating.. " : "Create Destination"}
             </Button>
           </form>
         </CardContent>
