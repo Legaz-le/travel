@@ -17,7 +17,7 @@ export default function Navbar({ session }: { session: Session | null }) {
             {session ? (
                 <>
           <Link
-            href={"/destination"}
+            href={"/destinations"}
             className="text-slate-900 hover:text-sky-500"
           >
             My Destinations
