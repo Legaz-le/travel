@@ -19,6 +19,10 @@ export default function NewTrip() {
           <form
             className="space-y-6"
             action={(formData: FormData) => {
+
+              if(imageUrl){
+                formData.append("imageUrl", imageUrl)
+              }
               startTransition(() => {
                 createTrip(formData);
               });
