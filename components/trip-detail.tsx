@@ -6,7 +6,7 @@ import { Calendar, MapPin, Plus } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Map from "./map";
 
 export type TripWithLocation = Trip & {
@@ -18,6 +18,13 @@ interface TripDetailCleintProps {
 
 export default function TripDetailClient({ trip }: TripDetailCleintProps) {
   const [activeTab, setActiveTab] = useState("overview");
+  const [dateRange, setDateRange] = useState("");
+
+  useEffect(() => {
+    const start = new Date(trip.startDate).toLocaleDateString("en-GB");
+    const end = new Date(trip.endDate).toLocaleDateString("en-GB");
+    setDateRange(`${start} - ${end}`);
+  }, [trip.startDate, trip.endDate]);
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
       {trip.imageUrl && (
@@ -39,10 +46,7 @@ export default function TripDetailClient({ trip }: TripDetailCleintProps) {
           </h1>
           <div className="flex items-center text-gray-500 mt-2">
             <Calendar className="h-5 w-5 mr-2" />
-            <span className="text-lg">
-              {trip.startDate.toLocaleDateString()} -{" "}
-              {trip.endDate.toLocaleDateString()}
-            </span>
+            <span className="text-lg">{dateRange}</span>
           </div>
         </div>
         <div className="mt-4 md:mt-0">
@@ -77,12 +81,11 @@ export default function TripDetailClient({ trip }: TripDetailCleintProps) {
                     <div>
                       <p className="font-medium text-gray-700">Dates</p>
                       <p className="text-sm text-gray-500">
-                        {trip.startDate.toLocaleDateString()} -{" "}
-                        {trip.endDate.toLocaleDateString()}
+                        {dateRange}
                         <br />
                         {`${Math.round(
-                          trip.endDate.getTime() -
-                            trip.startDate.getTime() / (1000 * 60 * 60 * 24)
+                          (trip.endDate.getTime() - trip.startDate.getTime()) /
+                            (1000 * 60 * 60 * 24)
                         )} day(s)`}
                       </p>
                     </div>
@@ -119,9 +122,7 @@ export default function TripDetailClient({ trip }: TripDetailCleintProps) {
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="itinerary" className="space-y-6">
-            
-          </TabsContent>
+          <TabsContent value="itinerary" className="space-y-6"></TabsContent>
         </Tabs>
       </div>
     </div>
