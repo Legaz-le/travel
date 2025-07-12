@@ -129,18 +129,40 @@ export default function TripDetailClient({ trip }: TripDetailCleintProps) {
             </div>
             {trip.locations.length === 0 ? (
               <div className="text-center p-4">
-                  <p>Add location to see them on the map.</p>
-                  <Link href={`/destinations/${trip.id}/itinerary/new`}>
-                    <Button>
-                      <Plus className="mr-2 h-5 w-5" /> Add Location
-                    </Button>
-                  </Link>
-                </div>
-            ):(
-              <SortableItinerary locations = {trip.locations} tripId ={trip.id}/>
+                <p>Add location to see them on the map.</p>
+                <Link href={`/destinations/${trip.id}/itinerary/new`}>
+                  <Button>
+                    <Plus className="mr-2 h-5 w-5" /> Add Location
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <SortableItinerary locations={trip.locations} tripId={trip.id} />
+            )}
+          </TabsContent>
+          <TabsContent value="map" className="space-y-6">
+            <div className="h-72 rounded-lg overflow-hidden shadow">
+              <Map itineraries={trip.locations} />
+            </div>
+            {trip.locations.length === 0 && (
+              <div className="text-center p-4">
+                <p>Add location to see them on the map.</p>
+                <Link href={`/destinations/${trip.id}/itinerary/new`}>
+                  <Button>
+                    <Plus className="mr-2 h-5 w-5" /> Add Location
+                  </Button>
+                </Link>
+              </div>
             )}
           </TabsContent>
         </Tabs>
+      </div>
+      <div className="text-center">
+        <Link href={`/destinations`}>
+          <Button>
+            Back to Destinations
+          </Button>
+        </Link>
       </div>
     </div>
   );
