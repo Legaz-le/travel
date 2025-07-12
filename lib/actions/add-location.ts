@@ -12,6 +12,10 @@ async function geocodeAddress(address: string) {
     )}&key=${apiKey}`
   );
   const data = await response.json();
+  if (data.status !== "OK" || !data.results || data.results.length === 0) {
+    console.error("Geocoding error:", data);
+    throw new Error(`Failed to geocode address. Status: ${data.status}`);
+  }
   const { lat, lng } = data.results[0].geometry.location;
   return { lat, lng };
 }
@@ -27,23 +31,21 @@ export async function addLocation(formData: FormData, tripId: string) {
     throw new Error("Address is required.");
   }
 
-  const {lat, lng} = await geocodeAddress(address);
+  const { lat, lng } = await geocodeAddress(address);
 
   const count = await prisma.location.count({
-    where:{tripId},
-  })
+    where: { tripId },
+  });
 
   await prisma.location.create({
     data: {
-        locationTitle: address,
-        lat,
-        lng,
-        tripId,
-        order: count,
-
+      locationTitle: address,
+      lat,
+      lng,
+      tripId,
+      order: count,
     },
   });
 
-  redirect(`/destinations/${tripId}`); 
-
+  redirect(`/destinations/${tripId}`);
 }

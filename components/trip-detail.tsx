@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { useState, useEffect } from "react";
 import Map from "./map";
+import SortableItinerary from "./sortable-itinerary";
 
 export type TripWithLocation = Trip & {
   locations: Location[];
@@ -50,7 +51,7 @@ export default function TripDetailClient({ trip }: TripDetailCleintProps) {
           </div>
         </div>
         <div className="mt-4 md:mt-0">
-          <Link href={`/trips/${trip.id}/itinerary/new`}>
+          <Link href={`/destinations/${trip.id}/itinerary/new`}>
             <Button>
               <Plus className="mr-2 h-5 w-5" /> Add Location
             </Button>
@@ -105,10 +106,10 @@ export default function TripDetailClient({ trip }: TripDetailCleintProps) {
               <div className="h-72 rounded-lg overflow-hidden shadow">
                 <Map itineraries={trip.locations} />
               </div>
-              {trip.locations.length > 0 && (
+              {trip.locations.length === 0 && (
                 <div className="text-center p-4">
                   <p>Add location to see them on the map.</p>
-                  <Link href={`/trips/${trip.id}/itinerary/new`}>
+                  <Link href={`/destinations/${trip.id}/itinerary/new`}>
                     <Button>
                       <Plus className="mr-2 h-5 w-5" /> Add Location
                     </Button>
@@ -122,7 +123,23 @@ export default function TripDetailClient({ trip }: TripDetailCleintProps) {
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="itinerary" className="space-y-6"></TabsContent>
+          <TabsContent value="itinerary" className="space-y-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-semibold">Full Itinerary</h2>
+            </div>
+            {trip.locations.length === 0 ? (
+              <div className="text-center p-4">
+                  <p>Add location to see them on the map.</p>
+                  <Link href={`/destinations/${trip.id}/itinerary/new`}>
+                    <Button>
+                      <Plus className="mr-2 h-5 w-5" /> Add Location
+                    </Button>
+                  </Link>
+                </div>
+            ):(
+              <SortableItinerary locations = {trip.locations} tripId ={trip.id}/>
+            )}
+          </TabsContent>
         </Tabs>
       </div>
     </div>
